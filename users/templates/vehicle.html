@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Verification & SOS Alert</title>
+    
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+    
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Vehicle Verification & SOS Alert</h2>
+        
+        <!-- Vehicle Verification Section -->
+        <div class="verification-section">
+            <h3>Vehicle Verification</h3>
+            <input type="text" id="vehicleNumber" placeholder="Enter Vehicle Number">
+            <button onclick="verifyVehicle()">Check Vehicle</button>
+            <p id="result"></p>
+        </div>
+        
+        <!-- Live Location Tracking Section -->
+        <div class="location-section">
+            <h3>Live Location Tracking</h3>
+            <div id="map"></div>
+            <button onclick="sendSOS()">🚨 Send SOS Alert</button>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+    }
+
+    h2 {
+        color: #d9534f;
+    }
+
+    h3 {
+        color: #5bc0de;
+        margin-top: 20px;
+    }
+
+    input {
+        padding: 10px;
+        width: 80%;
+        margin-top: 10px;
+    }
+
+    button {
+        background-color: #d9534f;
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: #c9302c;
+    }
+
+    #map {
+        height: 300px;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .verification-section, .location-section {
+        margin-bottom: 30px;
+    }
+</style>

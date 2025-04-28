@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her-Shield Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ffd1dc, #e6e6fa);
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .login-container::before {
+            content: "🛡️";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+        }
+
+        h2 {
+            color: #800080;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a4a4a;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e6e6fa;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #800080;
+            outline: none;
+            box-shadow: 0 0 5px rgba(128, 0, 128, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: #800080;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #660066;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e6e6fa;
+        }
+
+        .signup-link a {
+            color: #800080;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #660066;
+        }
+
+        .safety-info {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Her-Shield Login</h2>
+        <form id="loginForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Log In Securely</button>
+        </form>
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            // Get the CSRF token from the CSRF input field (which should be part of the form)
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+            console.log("Sending login request with:", { username, password });  // Debugging
+    
+            fetch('http://127.0.0.1:8000/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Include the CSRF token in the headers
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                console.log("Response status:", response.status);  // Debugging
+                return response.json();
+            })
+            .then(data => {
+                console.log("Response data:", data);  // Debugging
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;  // Redirect to the menu page
+                } else {
+                    alert('Login failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);  // Debugging
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+    
+
+</body>
+</html>

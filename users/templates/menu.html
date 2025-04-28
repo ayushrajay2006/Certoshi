@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her-Shield Menu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #ffd1dc, #e6e6fa);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .page-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .menu-container {
+            width: 60%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu-container::before {
+            content: "🛡️";
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+        }
+
+        .info-section {
+            width: 40%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        .scroll-container {
+            animation: scroll 12s linear infinite;
+            position: relative;
+            transform: translateY(0);
+            padding: 2rem;
+        }
+
+        .info-section:hover .scroll-container {
+            animation-play-state: paused;
+            cursor: default;
+        }
+
+        .info-section:hover {
+            box-shadow: inset 0 0 30px rgba(128, 0, 128, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .info-section::before,
+        .info-section::after {
+            content: '';
+            position: fixed;
+            left: 60%;
+            right: 0;
+            height: 70px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .info-section::before {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        .info-section::after {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+
+        h2 {
+            color: #800080;
+            text-align: center;
+            margin: 3rem 0 2rem 0;
+            font-size: 28px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .menu-button {
+            padding: 1.5rem;
+            background-color: #800080;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .menu-button:hover {
+            background-color: #660066;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            border-color: #e6e6fa;
+        }
+
+        .menu-button span {
+            margin-right: 15px;
+            font-size: 1.4rem;
+        }
+
+        .highlight {
+            color: #800080;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .info-content {
+            color: #4a4a4a;
+            line-height: 1.5;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .info-content h3 {
+            color: #800080;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.8rem;
+        }
+
+        .info-content p {
+            margin: 0.8rem 0;
+            font-size: 1.4rem;
+        }
+
+        .info-content ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .info-content li {
+            margin: 0.8rem 0;
+            font-size: 1.4rem;
+        }
+
+        .safety-info {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+        }
+
+        .safety-info p {
+            margin: 5px 0;
+        }
+
+        /* Add subtle animation to buttons */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-button:first-child {
+            background-color: #800080;
+            animation: pulse 2s infinite;
+        }
+
+        .menu-button:first-child:hover {
+            background-color: #800087;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="menu-container">
+            <h2>Welcome to Her-Shield</h2>
+            <div class="menu-buttons">
+                <a href="{% url 'contacts' %}" class="menu-button">
+                    <span>📞</span> Emergency Contacts
+                </a>
+                <a href="maps.html" class="menu-button">
+                    <span>🆘</span> SOS Button 
+                </a>
+                <a href="vehicle.html" class="menu-button">
+                    <span>🚗</span> Vehicle Tracker
+                </a>
+                <a href="{% url 'logout' %}" class="menu-button">
+                    <span>👤</span> Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="scroll-container">
+                <div class="info-content">
+                    <h3>About Her-Shield</h3>
+                    <p>Her-Shield is dedicated to empowering women with tools and resources for personal safety and security. Our platform provides comprehensive support through various features designed with your safety in mind.</p>
+
+                    <h3>Our Mission</h3>
+                    <p>To create a safer world for women by providing immediate access to emergency services, educational resources, and a supportive community network.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><span class="highlight">Emergency Contacts:</span> Quick access to emergency contacts and immediate assistance</li>
+                        <li><span class="highlight">Support Resources:</span> Comprehensive guides and helpful information</li>
+                        <li><span class="highlight">Community Forum:</span> Connect with others and share experiences</li>
+                        <li><span class="highlight">Safety Tips:</span> Expert advice and practical safety guidelines</li>
+                    </ul>
+
+                    <h3>Why Choose Her-Shield?</h3>
+                    <p>We understand that safety is paramount. Our platform is designed to be intuitive, reliable, and always accessible when you need it most. With Her-Shield, you're never alone.</p>
+
+                    <h3>24/7 Support</h3>
+                    <p>Our support team is available round the clock to assist you with any concerns or emergencies. Your safety is our top priority.</p>
+
+                    <h3>Privacy & Security</h3>
+                    <p>We maintain the highest standards of data protection and user privacy. Your information is always secure with us.</p>
+                </div>
+            </div>
+            <div class="scroll-container">
+                <div class="info-content">
+                    <h3>About Her-Shield</h3>
+                    <p>Her-Shield is dedicated to empowering women with tools and resources for personal safety and security. Our platform provides comprehensive support through various features designed with your safety in mind.</p>
+
+                    <h3>Our Mission</h3>
+                    <p>To create a safer world for women by providing immediate access to emergency services, educational resources, and a supportive community network.</p>
+
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><span class="highlight">Emergency Services:</span> Quick access to emergency contacts and immediate assistance</li>
+                        <li><span class="highlight">Support Resources:</span> Comprehensive guides and helpful information</li>
+                        <li><span class="highlight">Community Forum:</span> Connect with others and share experiences</li>
+                        <li><span class="highlight">Safety Tips:</span> Expert advice and practical safety guidelines</li>
+                    </ul>
+
+                    <h3>Why Choose Her-Shield?</h3>
+                    <p>We understand that safety is paramount. Our platform is designed to be intuitive, reliable, and always accessible when you need it most. With Her-Shield, you're never alone.</p>
+
+                    <h3>24/7 Support</h3>
+                    <p>Our support team is available round the clock to assist you with any concerns or emergencies. Your safety is our top priority.</p>
+
+                    <h3>Privacy & Security</h3>
+                    <p>We maintain the highest standards of data protection and user privacy. Your information is always secure with us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

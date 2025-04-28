@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Location & SOS Alert</title>
+    
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxGUcLZz0XHu_IQL1ULhideNr-pAl_g9E&callback=initMap" async defer></script>
+    
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #ffd1dc, #e6e6fa);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .container::before {
+            content: "🛡️";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+        }
+
+        h2 {
+            color: #800080;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 28px;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e6e6fa;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.2rem;
+            background-color: #800080;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            background-color: #660066;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #error-msg {
+            color: #ff4757;
+            font-weight: 500;
+            margin-top: 1rem;
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(255, 71, 87, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+
+        #error-msg.visible {
+            display: block;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #800080;
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #660066;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+            .btn {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Live Location Tracking & SOS Alert</h2>
+        <div id="map"></div>
+        <button class="btn" onclick="sendSOS()">🆘 Send SOS Alert</button>
+        <p id="error-msg"></p>
+        <a href="menu.html" class="back-button">← Back to Menu</a>
+    </div>
+
+    <script>
+        let map, marker, userLocation;
+
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("qvhQwSuMBIkE9I0uW"); // Replace with your EmailJS Public Key
+        })();
+
+        // Emergency contacts
+        const emergencyContacts = [
+            "shreya.dvsl@gmail.com",
+            "poojadasireddy@gmail.com",
+            "ayushrajay2006@gmail.com"
+        ];
+
+        // Initialize Google Map
+        function initMap() {
+            const defaultLocation = { lat: 17.3850, lng: 78.4867 }; // Default: Hyderabad
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: defaultLocation,
+                zoom: 15,
+            });
+
+            marker = new google.maps.Marker({
+                position: defaultLocation,
+                map: map,
+                title: "Current Location",
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        map.setCenter(userLocation);
+                        marker.setPosition(userLocation);
+                    },
+                    (error) => {
+                        document.getElementById("error-msg").textContent = "Error: " + error.message;
+                        console.error("Geolocation error:", error);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                document.getElementById("error-msg").textContent = "Geolocation is not supported by your browser.";
+            }
+        }
+
+        // Send SOS Email with Live Location
+        function sendSOS() {
+            if (!userLocation) {
+                alert("Unable to fetch location. Please enable location services.");
+                return;
+            }
+
+            const liveLocationLink = `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`;
+            
+            const templateParams = {
+                to_email: emergencyContacts.join(","), 
+                message: `🚨 Emergency Alert!\n\nSomeone has triggered an SOS.\nLive Location: ${liveLocationLink}`
+            };
+
+            emailjs.send("service_wekyb4o", "template_xkk41pb", templateParams)
+                .then(() => {
+                    alert("🚨 SOS Alert Sent with Live Location!");
+                })
+                .catch((error) => {
+                    console.error("❌ EmailJS Error:", error);
+                });
+        }
+    </script>
+
+</body>
+</html>
